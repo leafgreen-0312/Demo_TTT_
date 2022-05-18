@@ -16,6 +16,10 @@ namespace Demo_TTT
 
         public ListViewItem _itemselected;
 
+        
+        public DateTime _validdatetime;
+
+
         public Form1()
         {
             InitializeComponent();
@@ -50,6 +54,10 @@ namespace Demo_TTT
         private void Form1_Load(object sender, EventArgs e)
         {
             timer1.Interval = 1000;
+            var validdatetime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, DateTimeKind.Utc).ToLocalTime();
+            lblMyDatetime.Text = validdatetime.ToString("dd/MM/yyyy");
+            validdatetime = validdatetime.AddDays((double)(-(nudFiles.Value)));
+            lblValidDatetime.Text = validdatetime.ToString("dd/MM/yyyy");
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -116,8 +124,12 @@ namespace Demo_TTT
                             var second = int.Parse(filename.Substring(filename.LastIndexOf('_') + 13, 2));
 
                             var mydatetime = new DateTime(year, month, day, hour, minute, second).ToLocalTime();
+                            
+
                             var validdatetime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, DateTimeKind.Utc).ToLocalTime();
+
                             validdatetime = validdatetime.AddDays((double)(-(nudFiles.Value)));
+                            _validdatetime = validdatetime;
 
                             if ((DateTime.Compare(mydatetime, validdatetime) >= 0) && listView1.Items.ContainsKey(stationcode) && !File.Exists(txtDestination_Path.Text + "\\" + filename))
                             {
@@ -143,6 +155,16 @@ namespace Demo_TTT
             {
                 return;
             }
+        }
+
+        private void nudFiles_ValueChanged(object sender, EventArgs e)
+        {
+            var validdatetime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, DateTimeKind.Utc).ToLocalTime();
+            lblMyDatetime.Text = validdatetime.ToString("dd/MM/yyyy");
+            validdatetime = validdatetime.AddDays((double)(-(nudFiles.Value)));
+            lblValidDatetime.Text = validdatetime.ToString("dd/MM/yyyy");
+            
+           
         }
     }
 }
